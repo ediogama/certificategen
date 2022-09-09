@@ -29,7 +29,6 @@ const serverlessConfiguration: AWS = {
       }
     ]
   },
-  // import the function via paths
   functions: {
     generateCertificate: {
       handler: "src/functions/generateCertificate.handler",
@@ -58,17 +57,18 @@ const serverlessConfiguration: AWS = {
       ],
     }
   },
-  package: { individually: true },
+  package: { individually: false, include: ["./src/templates/**"] },
   custom: {
     esbuild: {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ['aws-sdk', 'chrome-aws-lambda'],
+      exclude: ['aws-sdk'],
       target: 'node14',
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
+      external: ["chrome-aws-lambda"]
     },
     dynamodb: {
       stages: ["dev", "local"],
